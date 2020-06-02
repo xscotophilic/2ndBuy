@@ -33,6 +33,19 @@ module.exports = (app) => {
     }
   });
 
+  app.get('/api/mybooks/:id', requireLogin, async (req, res) => {
+    try {
+      const book = await Book.findById(req.params.id);
+      if (!book) {
+        return res.status(400).json({ msg: 'There is no books for this Id.' });
+      }
+      res.json(book);
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).send('Server Error.');
+    }
+  });
+
   app.post('/api/mybooks', requireLogin, async (req, res) => {
     try {
       const { name, email, picurl, price, location } = req.body;
@@ -58,19 +71,23 @@ module.exports = (app) => {
       if (book.user.toString() !== req.user.id.toString())
         return res.status(401).send('UnAuthorized');
       const { name, email, picurl, price, location } = req.body;
-      const updatedBook = Book.findOneAndUpdate(
-        { id: req.params.id },
+      const updatedBook = await Book.findByIdAndUpdate(
+        { _id: req.params.id },
         {
-          $set: {
-            name,
-            email,
-            picurl,
-            price,
-            location,
-          },
+          name: name,
+          email: email,
+          picurl: picurl,
+          price: price,
+          location: location,
+        },
+        function (err, result) {
+          if (err) {
+            res.send(err);
+          } else {
+            res.json(result);
+          }
         }
       );
-      res.json(updatedBook);
     } catch (error) {
       console.error(error.message);
       return res.status(500).send('Server Error.');

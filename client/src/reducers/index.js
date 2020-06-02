@@ -6,6 +6,8 @@ import fetchBooksReducers from './fetchBooksReducers';
 import fetchMyBooksReducers from './fetchMyBooksReducer';
 import deleteBookReducer from './deleteBookReducer';
 import addBookReducer from './addBookReducer';
+import fetchBookById from './fetchBookById';
+import editBookReducer from './editBookReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -14,4 +16,6 @@ export default combineReducers({
   mybooks: fetchMyBooksReducers,
   addBookReducer: addBookReducer,
   deleteBook: deleteBookReducer,
+  fetchBookByIdData: fetchBookById,
+  editBookReducerData: editBookReducer,
 });
